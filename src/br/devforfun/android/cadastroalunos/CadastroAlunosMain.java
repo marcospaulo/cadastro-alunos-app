@@ -5,9 +5,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -59,6 +61,29 @@ public class CadastroAlunosMain extends Activity {
 	}
 
 	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		menu.setHeaderTitle("Escolha uma das operações");
+		menu.add(0, 0, 0, "Ligar");
+		menu.add(0, 1, 0, "Enviar SMS");
+		menu.add(0, 2, 0, "Achar no Mapa");
+		menu.add(0, 3, 0, "Navegar no Site");
+		menu.add(0, 4, 0, "Deletar");
+		menu.add(0, 5, 0, "Enviar Email");
+
+		super.onCreateContextMenu(menu, v, menuInfo);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+
+		Toast.makeText(this, "Você clicou no item: '" + item.getTitle() + "'",
+				Toast.LENGTH_LONG).show();
+
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		Toast.makeText(this, "Você clicou no item: '" + item.getTitle() + "'",
@@ -79,13 +104,9 @@ public class CadastroAlunosMain extends Activity {
 
 		listViewAlunos
 				.setOnItemLongClickListener(new OnItemLongClickListener() {
-
 					public boolean onItemLongClick(AdapterView<?> arg0,
 							View arg1, int arg2, long arg3) {
-						Toast.makeText(
-								CadastroAlunosMain.this,
-								"Posição selecionada com toque mais longo "
-										+ arg2, Toast.LENGTH_LONG).show();
+						registerForContextMenu(arg1);
 						return false;
 					}
 
