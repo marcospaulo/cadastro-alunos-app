@@ -55,6 +55,27 @@ public class AlunoDAO extends SQLiteOpenHelper {
 		getWritableDatabase().insert(TABELA, null, values);
 	}
 
+	public void atualizar(Aluno aluno) {
+		ContentValues values = new ContentValues();
+		values.put("id", aluno.getId());
+		values.put("nome", aluno.getNome());
+		values.put("telefone", aluno.getTelefone());
+		values.put("endereco", aluno.getEndereco());
+		values.put("site", aluno.getSite());
+		values.put("nota", aluno.getNota());
+		values.put("foto", aluno.getFoto());
+		getWritableDatabase().update(TABELA, values, "id=?",
+				new String[] { aluno.getId().toString() });
+	}
+	
+	public void insereOuAltera(Aluno aluno){
+		if(aluno.getId() ==  null){
+			inserir(aluno);
+		}else{
+			atualizar(aluno);
+		}
+	}
+
 	public List<Aluno> getLista() {
 		List<Aluno> alunos = new ArrayList<Aluno>();
 		Cursor c = getWritableDatabase().query(TABELA, COLS, null, null, null,
@@ -80,6 +101,23 @@ public class AlunoDAO extends SQLiteOpenHelper {
 	public void deletar(Aluno aluno) {
 		getWritableDatabase().delete(TABELA, "id=?",
 				new String[] { aluno.getId().toString() });
+	}
+
+	public void getAlunoPorId(Long id) {
+		Cursor c = getWritableDatabase().query(TABELA, COLS, "id=?",
+				new String[] { id.toString() }, null, null, null);
+		c.moveToFirst();
+
+		Aluno aluno = new Aluno();
+		aluno.setId(c.getLong(0));
+		aluno.setNome(c.getString(1));
+		aluno.setTelefone(c.getString(2));
+		aluno.setEndereco(c.getString(3));
+		aluno.setSite(c.getString(4));
+		aluno.setNota(c.getDouble(5));
+		aluno.setFoto(c.getString(6));
+
+		c.close();
 	}
 
 }

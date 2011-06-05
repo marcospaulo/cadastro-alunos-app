@@ -11,12 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import br.devforfun.android.cadastroalunos.R;
+import br.devforfun.android.cadastroalunos.adapter.AlunosAdapter;
 import br.devforfun.android.cadastroalunos.dao.AlunoDAO;
 import br.devforfun.android.cadastroalunos.model.Aluno;
 
@@ -30,6 +29,7 @@ public class CadastroAlunosMain extends Activity {
 
 	private ListView listViewAlunos;
 	private Aluno alunoSelecionado;
+	private List<Aluno> alunos;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,14 +41,13 @@ public class CadastroAlunosMain extends Activity {
 		dao.close();
 
 		listViewAlunos = (ListView) findViewById(R.id.list_view_alunos);
-
-		ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this,
+		AlunosAdapter adapter = new AlunosAdapter(this,
 				android.R.layout.simple_list_item_1, alunos);
 
 		listViewAlunos.setAdapter(adapter);
 		bind();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -89,7 +88,7 @@ public class CadastroAlunosMain extends Activity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-		if(item.getItemId() == 4){
+		if (item.getItemId() == 4) {
 			AlunoDAO dao = new AlunoDAO(this);
 			dao.deletar(alunoSelecionado);
 			dao.close();
@@ -103,17 +102,19 @@ public class CadastroAlunosMain extends Activity {
 
 		if (item.getItemId() == 0) {
 			startActivity(new Intent(this, CadastroForm.class));
-		} 
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	private void bind() {
 		listViewAlunos.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				Toast.makeText(CadastroAlunosMain.this,
-						"Você clicou na posição " + arg2, Toast.LENGTH_LONG)
-						.show();
+			public void onItemClick(AdapterView<?> adapter, View view, int posicao,
+					long id) {
+				
+				Intent edicao = new Intent(CadastroAlunosMain.this, CadastroForm.class);
+				edicao.putExtra("alunoSelecionado", alunos.get(posicao));
+				startActivity(edicao);
+			
 			}
 		});
 
@@ -121,7 +122,8 @@ public class CadastroAlunosMain extends Activity {
 				.setOnItemLongClickListener(new OnItemLongClickListener() {
 					public boolean onItemLongClick(AdapterView<?> adapter,
 							View view, int posicao, long id) {
-						alunoSelecionado = (Aluno) adapter.getItemAtPosition(posicao);
+						alunoSelecionado = ((AlunosAdapter) adapter.getAdapter())
+								.getItemAtPosition(posicao);
 						registerForContextMenu(view);
 						return false;
 					}
@@ -131,10 +133,10 @@ public class CadastroAlunosMain extends Activity {
 
 	private void carregaLista() {
 		AlunoDAO dao = new AlunoDAO(this);
-		List<Aluno> alunos = dao.getLista();
+		alunos = dao.getLista();
 		dao.close();
 
-		ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this,
+		AlunosAdapter adapter = new AlunosAdapter(this,
 				android.R.layout.simple_list_item_1, alunos);
 		listViewAlunos.setAdapter(adapter);
 	}

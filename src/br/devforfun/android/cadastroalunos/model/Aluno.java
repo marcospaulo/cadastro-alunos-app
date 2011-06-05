@@ -1,7 +1,14 @@
 package br.devforfun.android.cadastroalunos.model;
 
-public class Aluno {
+import java.io.Serializable;
 
+public class Aluno implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3420181366713200064L;
+	
 	private Long id;
 	private String nome;
 	private String telefone;
@@ -65,7 +72,7 @@ public class Aluno {
 	public void setFoto(String foto) {
 		this.foto = foto;
 	}
-	
+
 	@Override
 	public String toString() {
 		return id + " - " + nome;
