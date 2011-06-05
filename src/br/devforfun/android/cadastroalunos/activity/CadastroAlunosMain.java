@@ -29,6 +29,7 @@ import br.devforfun.android.cadastroalunos.model.Aluno;
 public class CadastroAlunosMain extends Activity {
 
 	private ListView listViewAlunos;
+	private Aluno alunoSelecionado;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -88,9 +89,12 @@ public class CadastroAlunosMain extends Activity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 
-		Toast.makeText(this, "Você clicou no item: '" + item.getTitle() + "'",
-				Toast.LENGTH_LONG).show();
-
+		if(item.getItemId() == 4){
+			AlunoDAO dao = new AlunoDAO(this);
+			dao.deletar(alunoSelecionado);
+			dao.close();
+			carregaLista();
+		}
 		return super.onContextItemSelected(item);
 	}
 
@@ -99,7 +103,7 @@ public class CadastroAlunosMain extends Activity {
 
 		if (item.getItemId() == 0) {
 			startActivity(new Intent(this, CadastroForm.class));
-		}
+		} 
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -115,9 +119,10 @@ public class CadastroAlunosMain extends Activity {
 
 		listViewAlunos
 				.setOnItemLongClickListener(new OnItemLongClickListener() {
-					public boolean onItemLongClick(AdapterView<?> arg0,
-							View arg1, int arg2, long arg3) {
-						registerForContextMenu(arg1);
+					public boolean onItemLongClick(AdapterView<?> adapter,
+							View view, int posicao, long id) {
+						alunoSelecionado = (Aluno) adapter.getItemAtPosition(posicao);
+						registerForContextMenu(view);
 						return false;
 					}
 
