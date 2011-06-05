@@ -1,11 +1,6 @@
 package br.devforfun.android.cadastroalunos.activity;
 
-import java.util.Arrays;
 import java.util.List;
-
-import br.devforfun.android.cadastroalunos.R;
-import br.devforfun.android.cadastroalunos.R.id;
-import br.devforfun.android.cadastroalunos.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,6 +16,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import br.devforfun.android.cadastroalunos.R;
+import br.devforfun.android.cadastroalunos.dao.AlunoDAO;
+import br.devforfun.android.cadastroalunos.model.Aluno;
 
 /**
  * 
@@ -37,15 +35,23 @@ public class CadastroAlunosMain extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		List<String> alunos = Arrays.asList("1", "2", "3");
+		AlunoDAO dao = new AlunoDAO(this);
+		List<Aluno> alunos = dao.getLista();
+		dao.close();
 
 		listViewAlunos = (ListView) findViewById(R.id.list_view_alunos);
 
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+		ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this,
 				android.R.layout.simple_list_item_1, alunos);
 
 		listViewAlunos.setAdapter(adapter);
 		bind();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		carregaLista();
 	}
 
 	@Override
@@ -116,6 +122,16 @@ public class CadastroAlunosMain extends Activity {
 					}
 
 				});
+	}
+
+	private void carregaLista() {
+		AlunoDAO dao = new AlunoDAO(this);
+		List<Aluno> alunos = dao.getLista();
+		dao.close();
+
+		ArrayAdapter<Aluno> adapter = new ArrayAdapter<Aluno>(this,
+				android.R.layout.simple_list_item_1, alunos);
+		listViewAlunos.setAdapter(adapter);
 	}
 
 }
