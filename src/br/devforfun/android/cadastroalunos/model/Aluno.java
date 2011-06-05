@@ -2,6 +2,9 @@ package br.devforfun.android.cadastroalunos.model;
 
 import java.io.Serializable;
 
+import org.json.JSONException;
+import org.json.JSONStringer;
+
 public class Aluno implements Serializable {
 
 	/**
@@ -78,4 +81,14 @@ public class Aluno implements Serializable {
 		return id + " - " + nome;
 	}
 
+	public String toJSON() throws JSONException{
+		JSONStringer j = new JSONStringer();
+		j.object().key("id").value(id).
+		key("nome").value(nome).
+		key("telefone").value(telefone).
+		key("endereco").value(endereco).
+		key("foto").value(foto).
+		key("nota").value(nota).endObject();
+		return j.toString();
+	}
 }

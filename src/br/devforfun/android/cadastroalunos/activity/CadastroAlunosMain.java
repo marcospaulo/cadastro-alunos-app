@@ -18,6 +18,7 @@ import br.devforfun.android.cadastroalunos.R;
 import br.devforfun.android.cadastroalunos.adapter.AlunosAdapter;
 import br.devforfun.android.cadastroalunos.dao.AlunoDAO;
 import br.devforfun.android.cadastroalunos.model.Aluno;
+import br.devforfun.android.cadastroalunos.service.Sincronismo;
 
 /**
  * 
@@ -102,7 +103,13 @@ public class CadastroAlunosMain extends Activity {
 
 		if (item.getItemId() == 0) {
 			startActivity(new Intent(this, CadastroForm.class));
+		} else if(item.getItemId() == 1){
+			Sincronismo s = new Sincronismo(CadastroAlunosMain.this);
+			s.sincronizar();
+		} else if(item.getItemId() == 2){
+			startActivity(new Intent(this, GaleriaAlunos.class));
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 
