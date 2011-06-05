@@ -67,11 +67,11 @@ public class AlunoDAO extends SQLiteOpenHelper {
 		getWritableDatabase().update(TABELA, values, "id=?",
 				new String[] { aluno.getId().toString() });
 	}
-	
-	public void insereOuAltera(Aluno aluno){
-		if(aluno.getId() ==  null){
+
+	public void insereOuAltera(Aluno aluno) {
+		if (aluno.getId() == null) {
 			inserir(aluno);
-		}else{
+		} else {
 			atualizar(aluno);
 		}
 	}
@@ -118,6 +118,14 @@ public class AlunoDAO extends SQLiteOpenHelper {
 		aluno.setFoto(c.getString(6));
 
 		c.close();
+	}
+
+	public boolean isAluno(String telefone) {
+		Cursor rawQuery = getReadableDatabase().rawQuery(
+				"SELECT telefone from " + TABELA + " WHERE telefone = ?",
+				new String[] { telefone });
+		int b = rawQuery.getCount();
+		return b > 0;
 	}
 
 }
